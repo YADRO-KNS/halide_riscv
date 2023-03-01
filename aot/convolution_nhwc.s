@@ -8,92 +8,88 @@
 	.type	convolution_nhwc,@function
 convolution_nhwc:                       # @convolution_nhwc
 # %bb.0:                                # %entry
-	addi	sp, sp, -336
-	sd	ra, 328(sp)                     # 8-byte Folded Spill
-	sd	s0, 320(sp)                     # 8-byte Folded Spill
-	sd	s1, 312(sp)                     # 8-byte Folded Spill
-	sd	s2, 304(sp)                     # 8-byte Folded Spill
-	sd	s3, 296(sp)                     # 8-byte Folded Spill
-	sd	s4, 288(sp)                     # 8-byte Folded Spill
-	sd	s5, 280(sp)                     # 8-byte Folded Spill
-	sd	s6, 272(sp)                     # 8-byte Folded Spill
-	sd	s7, 264(sp)                     # 8-byte Folded Spill
-	sd	s8, 256(sp)                     # 8-byte Folded Spill
-	sd	s9, 248(sp)                     # 8-byte Folded Spill
-	sd	s10, 240(sp)                    # 8-byte Folded Spill
-	sd	s11, 232(sp)                    # 8-byte Folded Spill
-	ld	t5, 40(a2)
-	ld	a6, 16(a0)
-	ld	s3, 16(a1)
-	lw	t0, 0(t5)
-	lw	t1, 16(t5)
-	lw	s2, 24(t5)
-	lw	t2, 32(t5)
-	lw	a3, 40(t5)
-	sd	a3, 8(sp)                       # 8-byte Folded Spill
-	lw	t3, 48(t5)
-	lw	t4, 56(t5)
-	mv	t6, a6
-	beqz	a6, .LBB0_6
+	addi	sp, sp, -400
+	sd	s0, 392(sp)                     # 8-byte Folded Spill
+	sd	s1, 384(sp)                     # 8-byte Folded Spill
+	sd	s2, 376(sp)                     # 8-byte Folded Spill
+	sd	s3, 368(sp)                     # 8-byte Folded Spill
+	sd	s4, 360(sp)                     # 8-byte Folded Spill
+	sd	s5, 352(sp)                     # 8-byte Folded Spill
+	sd	s6, 344(sp)                     # 8-byte Folded Spill
+	sd	s7, 336(sp)                     # 8-byte Folded Spill
+	sd	s8, 328(sp)                     # 8-byte Folded Spill
+	ld	a3, 40(a2)
+	ld	t6, 16(a2)
+	lw	t0, 0(a3)
+	lw	t1, 16(a3)
+	lw	a7, 24(a3)
+	lw	t2, 32(a3)
+	lw	a6, 40(a3)
+	lw	t3, 48(a3)
+	lw	t4, 56(a3)
+	ld	s6, 16(a0)
+	mv	t5, t6
+	beqz	t6, .LBB0_6
 # %bb.1:                                # %after_bb
-	ld	s4, 16(a2)
-	mv	a4, s3
-	beqz	s3, .LBB0_12
+	ld	s2, 16(a1)
+	mv	a3, s6
+	beqz	s6, .LBB0_12
 .LBB0_2:                                # %after_bb1
-	beqz	s4, .LBB0_14
+	beqz	s2, .LBB0_14
 .LBB0_3:
-	li	a2, 0
-	beqz	t6, .LBB0_16
-.LBB0_4:
-	li	a0, 0
-	beqz	a4, .LBB0_17
-.LBB0_5:
 	li	a1, 0
-	or	a1, a1, a2
+	beqz	t5, .LBB0_16
+.LBB0_4:
+	li	a2, 0
+	beqz	a3, .LBB0_17
+.LBB0_5:
+	li	a0, 0
 	or	a0, a0, a1
+	or	a0, a0, a2
 	beqz	a0, .LBB0_18
-	j	.LBB0_30
+	j	.LBB0_34
 .LBB0_6:                                # %_halide_buffer_is_bounds_query.exit
-	ld	a3, 0(a0)
-	beqz	a3, .LBB0_8
+	ld	a4, 0(a2)
+	beqz	a4, .LBB0_8
 # %bb.7:
-	li	t6, 0
-	ld	s4, 16(a2)
-	mv	a4, s3
-	bnez	s3, .LBB0_2
+	li	t5, 0
+	ld	s2, 16(a1)
+	mv	a3, s6
+	bnez	s6, .LBB0_2
 	j	.LBB0_12
 .LBB0_8:                                # %then_bb
-	ld	a3, 40(a0)
-	sw	zero, 16(sp)
-	li	a4, 16
-	sw	a4, 20(sp)
+	sw	zero, 0(sp)
+	li	a4, 32
+	sw	a4, 4(sp)
 	li	a5, 1
-	sw	a5, 24(sp)
+	sw	a5, 8(sp)
+	sw	zero, 12(sp)
+	sw	zero, 16(sp)
+	li	s1, 126
+	sw	s1, 20(sp)
+	sw	a4, 24(sp)
 	sw	zero, 28(sp)
 	sw	zero, 32(sp)
-	li	s1, 128
 	sw	s1, 36(sp)
+	lui	a4, 1
+	addiw	a4, a4, -64
 	sw	a4, 40(sp)
 	sw	zero, 44(sp)
 	sw	zero, 48(sp)
-	sw	s1, 52(sp)
-	slli	a4, a5, 11
+	sw	a5, 52(sp)
+	lui	a4, 124
+	addiw	a4, a4, 128
 	sw	a4, 56(sp)
 	sw	zero, 60(sp)
-	sw	zero, 64(sp)
-	sw	a5, 68(sp)
-	lui	a4, 64
-	sw	a4, 72(sp)
-	sw	zero, 76(sp)
-	sd	zero, 16(a0)
-	sd	zero, 8(a0)
-	sd	zero, 0(a0)
+	sd	zero, 16(a2)
+	sd	zero, 8(a2)
+	sd	zero, 0(a2)
 	lui	a4, 512
 	addiw	a4, a4, 9
 	slli	a4, a4, 13
 	addi	a5, a4, 2
-	addi	a4, sp, 16
-	sd	a5, 32(a0)
+	mv	a4, sp
+	sd	a5, 32(a2)
 	beq	a4, a3, .LBB0_11
 # %bb.9:                                # %for.body.i.preheader
 	li	a5, 4
@@ -108,276 +104,292 @@ convolution_nhwc:                       # @convolution_nhwc
 	addi	a4, a4, 16
 	bnez	s1, .LBB0_10
 .LBB0_11:                               # %_halide_buffer_init.exit
-	li	t6, 0
-	sd	zero, 24(a0)
-	ld	s4, 16(a2)
-	mv	a4, s3
-	bnez	s3, .LBB0_2
-.LBB0_12:                               # %_halide_buffer_is_bounds_query.exit84
-	ld	a3, 0(a1)
-	beqz	a3, .LBB0_31
-# %bb.13:
-	li	a4, 0
-	bnez	s4, .LBB0_3
-.LBB0_14:                               # %_halide_buffer_is_bounds_query.exit92
-	ld	a3, 0(a2)
+	li	t5, 0
+	sd	zero, 24(a2)
+	ld	s2, 16(a1)
+	mv	a3, s6
+	bnez	s6, .LBB0_2
+.LBB0_12:                               # %_halide_buffer_is_bounds_query.exit86
+	ld	a3, 0(a0)
 	beqz	a3, .LBB0_35
-# %bb.15:                               # %land.rhs.i114
-	ld	a2, 0(a2)
-	seqz	a2, a2
-	bnez	t6, .LBB0_4
-.LBB0_16:                               # %land.rhs.i119
-	ld	a0, 0(a0)
-	seqz	a0, a0
-	bnez	a4, .LBB0_5
-.LBB0_17:                               # %land.rhs.i124
+# %bb.13:
+	li	a3, 0
+	bnez	s2, .LBB0_3
+.LBB0_14:                               # %_halide_buffer_is_bounds_query.exit94
+	ld	a4, 0(a1)
+	beqz	a4, .LBB0_39
+# %bb.15:                               # %land.rhs.i116
 	ld	a1, 0(a1)
 	seqz	a1, a1
-	or	a1, a1, a2
+	bnez	t5, .LBB0_4
+.LBB0_16:                               # %land.rhs.i121
+	ld	a2, 0(a2)
+	seqz	a2, a2
+	bnez	a3, .LBB0_5
+.LBB0_17:                               # %land.rhs.i126
+	ld	a0, 0(a0)
+	seqz	a0, a0
 	or	a0, a0, a1
-	bnez	a0, .LBB0_30
+	or	a0, a0, a2
+	bnez	a0, .LBB0_34
 .LBB0_18:                               # %"produce convolution_nhwc"
-	li	t5, 0
-	mulw	a0, s2, t1
-	ld	a1, 8(sp)                       # 8-byte Folded Reload
-	mulw	a1, a1, t2
+	li	s4, 0
+	mulw	a0, a7, t1
+	mulw	a1, a6, t2
 	mulw	a2, t4, t3
 	add	a0, a0, a1
 	add	a0, a0, a2
-	add	t0, t0, a0
+	add	a0, a0, t0
+	negw	t0, a0
 	vsetvli	a0, zero, e32, m1
 	vmv.v.i	v8, 0
-	li	t4, 4
-	addi	a2, sp, 208
-	lui	a0, 2
-	li	a5, 3
-	li	s9, 16
-	li	t6, 8
+	li	t3, 4
+	li	a1, 3
+	li	t4, 16
 	li	t1, 126
 .LBB0_19:                               # %"for convolution_nhwc.s0.y"
                                         # =>This Loop Header: Depth=1
                                         #     Child Loop BB0_20 Depth 2
                                         #       Child Loop BB0_21 Depth 3
-                                        #         Child Loop BB0_22 Depth 4
-                                        #           Child Loop BB0_23 Depth 5
-                                        #             Child Loop BB0_24 Depth 6
-	li	t3, 0
-	ld	a1, 8(sp)                       # 8-byte Folded Reload
-	mulw	t2, a1, t5
-	mv	a7, a6
+                                        #       Child Loop BB0_23 Depth 3
+                                        #         Child Loop BB0_24 Depth 4
+                                        #           Child Loop BB0_25 Depth 5
+                                        #             Child Loop BB0_26 Depth 6
+                                        #       Child Loop BB0_31 Depth 3
+	li	s0, 0
+	mv	t2, t0
 .LBB0_20:                               # %"for convolution_nhwc.s0.x"
                                         #   Parent Loop BB0_19 Depth=1
                                         # =>  This Loop Header: Depth=2
                                         #       Child Loop BB0_21 Depth 3
-                                        #         Child Loop BB0_22 Depth 4
-                                        #           Child Loop BB0_23 Depth 5
-                                        #             Child Loop BB0_24 Depth 6
-	li	s8, 0
-	mulw	a1, s2, t3
-	add	a1, a1, t2
-	subw	s5, a1, t0
-	mv	s7, s3
-.LBB0_21:                               # %"for convolution_nhwc.s0.c.c"
+                                        #       Child Loop BB0_23 Depth 3
+                                        #         Child Loop BB0_24 Depth 4
+                                        #           Child Loop BB0_25 Depth 5
+                                        #             Child Loop BB0_26 Depth 6
+                                        #       Child Loop BB0_31 Depth 3
+	slli	t5, t2, 2
+	add	t5, t5, t6
+	li	a0, 8
+	addi	a2, sp, 192
+.LBB0_21:                               # %"for sum.s0.c.c_vo"
+                                        #   Parent Loop BB0_19 Depth=1
+                                        #     Parent Loop BB0_20 Depth=2
+                                        # =>    This Inner Loop Header: Depth=3
+	vsetvli	zero, t3, e32, m1
+	vsw.v	v8, (a2)
+	addi	a0, a0, -1
+	addi	a2, a2, 16
+	bnez	a0, .LBB0_21
+# %bb.22:                               # %"for sum.s1.r4$z.preheader"
+                                        #   in Loop: Header=BB0_20 Depth=2
+	li	s5, 0
+	mv	s3, s2
+.LBB0_23:                               # %"for sum.s1.r4$z"
                                         #   Parent Loop BB0_19 Depth=1
                                         #     Parent Loop BB0_20 Depth=2
                                         # =>    This Loop Header: Depth=3
-                                        #         Child Loop BB0_22 Depth 4
-                                        #           Child Loop BB0_23 Depth 5
-                                        #             Child Loop BB0_24 Depth 6
-	li	s10, 0
-	vsetvli	zero, t4, e32, m1
-	vsw.v	v8, (a2)
-	mv	s11, s7
-	mv	s6, a7
-.LBB0_22:                               # %"for sum$3.s1.r144$z"
+                                        #         Child Loop BB0_24 Depth 4
+                                        #           Child Loop BB0_25 Depth 5
+                                        #             Child Loop BB0_26 Depth 6
+	li	s8, 0
+	mv	s7, s3
+.LBB0_24:                               # %"for sum.s1.r4$y"
                                         #   Parent Loop BB0_19 Depth=1
                                         #     Parent Loop BB0_20 Depth=2
-                                        #       Parent Loop BB0_21 Depth=3
+                                        #       Parent Loop BB0_23 Depth=3
                                         # =>      This Loop Header: Depth=4
-                                        #           Child Loop BB0_23 Depth 5
-                                        #             Child Loop BB0_24 Depth 6
-	li	a3, 0
-	mv	a1, s11
-	mv	ra, s6
-.LBB0_23:                               # %"for sum$3.s1.r144$y"
+                                        #           Child Loop BB0_25 Depth 5
+                                        #             Child Loop BB0_26 Depth 6
+	li	a4, 0
+	add	a0, s8, s4
+	slli	a0, a0, 11
+	add	s1, a0, s5
+	mv	a3, s7
+.LBB0_25:                               # %"for sum.s1.r4$x"
                                         #   Parent Loop BB0_19 Depth=1
                                         #     Parent Loop BB0_20 Depth=2
-                                        #       Parent Loop BB0_21 Depth=3
-                                        #         Parent Loop BB0_22 Depth=4
+                                        #       Parent Loop BB0_23 Depth=3
+                                        #         Parent Loop BB0_24 Depth=4
                                         # =>        This Loop Header: Depth=5
-                                        #             Child Loop BB0_24 Depth 6
-	li	s0, 3
-	mv	s1, a1
-	mv	a4, ra
-.LBB0_24:                               # %"for sum$3.s1.r144$x"
+                                        #             Child Loop BB0_26 Depth 6
+	add	a0, a4, s0
+	slli	a0, a0, 4
+	add	a0, a0, s1
+	slli	a0, a0, 2
+	add	a0, a0, s6
+	flw	ft0, 0(a0)
+	li	a5, 8
+	addi	a0, sp, 192
+	mv	a2, a3
+.LBB0_26:                               # %"for sum.s1.c.c_vo"
                                         #   Parent Loop BB0_19 Depth=1
                                         #     Parent Loop BB0_20 Depth=2
-                                        #       Parent Loop BB0_21 Depth=3
-                                        #         Parent Loop BB0_22 Depth=4
-                                        #           Parent Loop BB0_23 Depth=5
+                                        #       Parent Loop BB0_23 Depth=3
+                                        #         Parent Loop BB0_24 Depth=4
+                                        #           Parent Loop BB0_25 Depth=5
                                         # =>          This Inner Loop Header: Depth=6
-	vlwu.v	v9, (s1)
-	flw	ft0, 0(a4)
-	vlwu.v	v10, (a2)
+	vlwu.v	v9, (a2)
+	vlwu.v	v10, (a0)
 	vfmul.vf	v9, v9, ft0
 	vfadd.vv	v9, v10, v9
-	vsw.v	v9, (a2)
-	addi	s0, s0, -1
-	addi	a4, a4, 64
-	addi	s1, s1, 128
-	bnez	s0, .LBB0_24
-# %bb.25:                               # %"end for sum$3.s1.r144$x"
-                                        #   in Loop: Header=BB0_23 Depth=5
-	addi	a3, a3, 1
-	add	ra, ra, a0
-	addi	a1, a1, 384
-	bne	a3, a5, .LBB0_23
-# %bb.26:                               # %"end for sum$3.s1.r144$y"
-                                        #   in Loop: Header=BB0_22 Depth=4
-	addi	s10, s10, 1
-	addi	s6, s6, 4
-	addi	s11, s11, 1152
-	bne	s10, s9, .LBB0_22
-# %bb.27:                               # %"consume sum$3"
-                                        #   in Loop: Header=BB0_21 Depth=3
-	vlwu.v	v9, (a2)
-	slli	a1, s8, 2
-	add	a1, a1, s5
-	slli	a1, a1, 2
-	add	a1, a1, s4
-	vsw.v	v9, (a1)
+	vsw.v	v9, (a0)
+	addi	a5, a5, -1
+	addi	a2, a2, 16
+	addi	a0, a0, 16
+	bnez	a5, .LBB0_26
+# %bb.27:                               # %"end for sum.s1.c.c_vo"
+                                        #   in Loop: Header=BB0_25 Depth=5
+	addi	a4, a4, 1
+	addi	a3, a3, 128
+	bne	a4, a1, .LBB0_25
+# %bb.28:                               # %"end for sum.s1.r4$x"
+                                        #   in Loop: Header=BB0_24 Depth=4
 	addi	s8, s8, 1
-	addi	s7, s7, 16
-	bne	s8, t6, .LBB0_21
-# %bb.28:                               # %"end for convolution_nhwc.s0.c.c"
+	addi	s7, s7, 384
+	bne	s8, a1, .LBB0_24
+# %bb.29:                               # %"end for sum.s1.r4$y"
+                                        #   in Loop: Header=BB0_23 Depth=3
+	addi	s5, s5, 1
+	addi	s3, s3, 1152
+	bne	s5, t4, .LBB0_23
+# %bb.30:                               # %"consume sum"
                                         #   in Loop: Header=BB0_20 Depth=2
-	addi	t3, t3, 1
-	addi	a7, a7, 64
-	bne	t3, t1, .LBB0_20
-# %bb.29:                               # %"end for convolution_nhwc.s0.x"
+	li	a0, 8
+	addi	a2, sp, 192
+.LBB0_31:                               # %"for convolution_nhwc.s0.c.c_vo"
+                                        #   Parent Loop BB0_19 Depth=1
+                                        #     Parent Loop BB0_20 Depth=2
+                                        # =>    This Inner Loop Header: Depth=3
+	vlwu.v	v9, (a2)
+	vsw.v	v9, (t5)
+	addi	a0, a0, -1
+	addi	t5, t5, 16
+	addi	a2, a2, 16
+	bnez	a0, .LBB0_31
+# %bb.32:                               # %"end for convolution_nhwc.s0.c.c_vo"
+                                        #   in Loop: Header=BB0_20 Depth=2
+	addi	s0, s0, 1
+	addw	t2, t2, a7
+	bne	s0, t1, .LBB0_20
+# %bb.33:                               # %"end for convolution_nhwc.s0.x"
                                         #   in Loop: Header=BB0_19 Depth=1
-	addi	t5, t5, 1
-	add	a6, a6, a0
-	bne	t5, t1, .LBB0_19
-.LBB0_30:                               # %destructor_block
+	addi	s4, s4, 1
+	addw	t0, t0, a6
+	bne	s4, t1, .LBB0_19
+.LBB0_34:                               # %destructor_block
 	li	a0, 0
-	ld	ra, 328(sp)                     # 8-byte Folded Reload
-	ld	s0, 320(sp)                     # 8-byte Folded Reload
-	ld	s1, 312(sp)                     # 8-byte Folded Reload
-	ld	s2, 304(sp)                     # 8-byte Folded Reload
-	ld	s3, 296(sp)                     # 8-byte Folded Reload
-	ld	s4, 288(sp)                     # 8-byte Folded Reload
-	ld	s5, 280(sp)                     # 8-byte Folded Reload
-	ld	s6, 272(sp)                     # 8-byte Folded Reload
-	ld	s7, 264(sp)                     # 8-byte Folded Reload
-	ld	s8, 256(sp)                     # 8-byte Folded Reload
-	ld	s9, 248(sp)                     # 8-byte Folded Reload
-	ld	s10, 240(sp)                    # 8-byte Folded Reload
-	ld	s11, 232(sp)                    # 8-byte Folded Reload
-	addi	sp, sp, 336
+	ld	s0, 392(sp)                     # 8-byte Folded Reload
+	ld	s1, 384(sp)                     # 8-byte Folded Reload
+	ld	s2, 376(sp)                     # 8-byte Folded Reload
+	ld	s3, 368(sp)                     # 8-byte Folded Reload
+	ld	s4, 360(sp)                     # 8-byte Folded Reload
+	ld	s5, 352(sp)                     # 8-byte Folded Reload
+	ld	s6, 344(sp)                     # 8-byte Folded Reload
+	ld	s7, 336(sp)                     # 8-byte Folded Reload
+	ld	s8, 328(sp)                     # 8-byte Folded Reload
+	addi	sp, sp, 400
 	ret
-.LBB0_31:                               # %then_bb2
-	ld	a3, 40(a1)
-	sw	zero, 80(sp)
-	li	a4, 32
-	sw	a4, 84(sp)
+.LBB0_35:                               # %then_bb2
+	ld	a3, 40(a0)
+	sw	zero, 64(sp)
+	li	a4, 16
+	sw	a4, 68(sp)
 	li	a5, 1
-	sw	a5, 88(sp)
+	sw	a5, 72(sp)
+	sw	zero, 76(sp)
+	sw	zero, 80(sp)
+	li	s0, 128
+	sw	s0, 84(sp)
+	sw	a4, 88(sp)
 	sw	zero, 92(sp)
 	sw	zero, 96(sp)
-	li	a5, 3
-	sw	a5, 100(sp)
+	sw	s0, 100(sp)
+	slli	a4, a5, 11
 	sw	a4, 104(sp)
 	sw	zero, 108(sp)
 	sw	zero, 112(sp)
 	sw	a5, 116(sp)
-	li	a4, 96
+	lui	a4, 64
 	sw	a4, 120(sp)
 	sw	zero, 124(sp)
-	sw	zero, 128(sp)
-	li	a4, 16
-	sw	a4, 132(sp)
-	li	a4, 288
-	sw	a4, 136(sp)
-	sw	zero, 140(sp)
-	sd	zero, 16(a1)
-	sd	zero, 8(a1)
-	sd	zero, 0(a1)
+	sd	zero, 16(a0)
+	sd	zero, 8(a0)
+	sd	zero, 0(a0)
 	lui	a4, 512
 	addiw	a4, a4, 9
 	slli	a4, a4, 13
 	addi	a5, a4, 2
-	addi	a4, sp, 80
-	sd	a5, 32(a1)
-	beq	a4, a3, .LBB0_34
-# %bb.32:                               # %for.body.i108.preheader
+	addi	a4, sp, 64
+	sd	a5, 32(a0)
+	beq	a4, a3, .LBB0_38
+# %bb.36:                               # %for.body.i110.preheader
 	li	a5, 4
-	li	s1, 4
-.LBB0_33:                               # %for.body.i108
+	li	s0, 4
+.LBB0_37:                               # %for.body.i110
                                         # =>This Inner Loop Header: Depth=1
 	vsetvli	zero, a5, e32, m1
 	vlwu.v	v8, (a4)
 	vsw.v	v8, (a3)
-	addi	s1, s1, -1
+	addi	s0, s0, -1
 	addi	a3, a3, 16
 	addi	a4, a4, 16
-	bnez	s1, .LBB0_33
-.LBB0_34:                               # %_halide_buffer_init.exit110
-	li	a4, 0
-	sd	zero, 24(a1)
-	bnez	s4, .LBB0_3
+	bnez	s0, .LBB0_37
+.LBB0_38:                               # %_halide_buffer_init.exit112
+	li	a3, 0
+	sd	zero, 24(a0)
+	bnez	s2, .LBB0_3
 	j	.LBB0_14
-.LBB0_35:                               # %then_bb5
+.LBB0_39:                               # %then_bb5
+	ld	a4, 40(a1)
+	sw	zero, 128(sp)
+	li	a5, 32
+	sw	a5, 132(sp)
+	li	s0, 1
+	sw	s0, 136(sp)
+	sw	zero, 140(sp)
 	sw	zero, 144(sp)
-	li	a3, 32
-	sw	a3, 148(sp)
-	li	a5, 1
+	li	s0, 3
+	sw	s0, 148(sp)
 	sw	a5, 152(sp)
 	sw	zero, 156(sp)
 	sw	zero, 160(sp)
-	li	s1, 126
-	sw	s1, 164(sp)
-	sw	a3, 168(sp)
+	sw	s0, 164(sp)
+	li	a5, 96
+	sw	a5, 168(sp)
 	sw	zero, 172(sp)
 	sw	zero, 176(sp)
-	sw	s1, 180(sp)
-	lui	a3, 1
-	addiw	a3, a3, -64
-	sw	a3, 184(sp)
+	li	a5, 16
+	sw	a5, 180(sp)
+	li	a5, 288
+	sw	a5, 184(sp)
 	sw	zero, 188(sp)
-	sw	zero, 192(sp)
-	sw	a5, 196(sp)
-	lui	a3, 124
-	addiw	a3, a3, 128
-	sw	a3, 200(sp)
-	sw	zero, 204(sp)
-	sd	zero, 16(a2)
-	sd	zero, 8(a2)
-	sd	zero, 0(a2)
-	lui	a3, 512
-	addiw	a3, a3, 9
-	slli	a3, a3, 13
-	addi	a5, a3, 2
-	addi	a3, sp, 144
-	sd	a5, 32(a2)
-	beq	a3, t5, .LBB0_38
-# %bb.36:                               # %for.body.i141.preheader
+	sd	zero, 16(a1)
+	sd	zero, 8(a1)
+	sd	zero, 0(a1)
+	lui	a5, 512
+	addiw	a5, a5, 9
+	slli	a5, a5, 13
+	addi	a5, a5, 2
+	addi	s0, sp, 128
+	sd	a5, 32(a1)
+	beq	s0, a4, .LBB0_42
+# %bb.40:                               # %for.body.i143.preheader
 	li	a5, 4
 	li	s1, 4
-.LBB0_37:                               # %for.body.i141
+.LBB0_41:                               # %for.body.i143
                                         # =>This Inner Loop Header: Depth=1
 	vsetvli	zero, a5, e32, m1
-	vlwu.v	v8, (a3)
-	vsw.v	v8, (t5)
+	vlwu.v	v8, (s0)
+	vsw.v	v8, (a4)
 	addi	s1, s1, -1
-	addi	t5, t5, 16
-	addi	a3, a3, 16
-	bnez	s1, .LBB0_37
-.LBB0_38:                               # %_halide_buffer_init.exit143
-	sd	zero, 24(a2)
-	ld	a2, 0(a2)
-	seqz	a2, a2
-	bnez	t6, .LBB0_4
+	addi	a4, a4, 16
+	addi	s0, s0, 16
+	bnez	s1, .LBB0_41
+.LBB0_42:                               # %_halide_buffer_init.exit145
+	sd	zero, 24(a1)
+	ld	a1, 0(a1)
+	seqz	a1, a1
+	bnez	t5, .LBB0_4
 	j	.LBB0_16
 .Lfunc_end0:
 	.size	convolution_nhwc, .Lfunc_end0-convolution_nhwc
@@ -419,14 +431,14 @@ convolution_nhwc_metadata:              # @convolution_nhwc_metadata
 	.section	.rodata,"a",@progbits
 	.p2align	5, 0x0
 .Lstr:
-	.asciz	"b761"
-	.size	.Lstr, 5
+	.asciz	"input"
+	.size	.Lstr, 6
 
 	.type	.Lstr.4,@object                 # @str.4
 	.p2align	5, 0x0
 .Lstr.4:
-	.asciz	"b762"
-	.size	.Lstr.4, 5
+	.asciz	"weights"
+	.size	.Lstr.4, 8
 
 	.type	.L__unnamed_1,@object           # @0
 	.p2align	3, 0x0

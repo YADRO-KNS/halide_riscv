@@ -37,6 +37,9 @@ void convolution_nchw_halide(float* src, float* kernel, float* dst,
 #else
     static Func conv("convolution_nchw");
     if (!conv.defined()) {
+        input.set_name("input");
+        weights.set_name("weights");
+
         Halide::Var x("x"), y("y"), c("c"), n("n");
         Halide::RDom r(0, kW, 0, kH, 0, inpChannels);
         Halide::Expr kx = x * stride + r.x;
@@ -52,15 +55,12 @@ void convolution_nchw_halide(float* src, float* kernel, float* dst,
             .bound(c, 0, outChannels)
             .bound(n, 0, batch);
 
-        int factor = 4;
-        conv.vectorize(x, factor);
-
         // Compile
         Target target;
         target.os = Target::OS::Linux;
         target.arch = Target::Arch::RISCV;
         target.bits = 64;
-        target.vector_bits = factor * sizeof(float) * 8;
+        target.vector_bits = 128;
 
         // Tested XuanTie C906 has 128-bit vector unit
         CV_Assert(target.vector_bits <= 128);
@@ -72,6 +72,14 @@ void convolution_nchw_halide(float* src, float* kernel, float* dst,
         target.set_features(features);
 
         std::cout << target << std::endl;
+
+        try {
+            load_plugin("autoschedule_mullapudi2016");
+            Pipeline(conv).apply_autoscheduler(target, {"Mullapudi2016", {{"parallelism", "0"}}});
+        } catch(Halide::CompileError err) {
+            CV_Error(cv::Error::StsError, err.what());
+        }
+
         conv.print_loop_nest();
 
         // Dump AOT code
@@ -92,6 +100,9 @@ void convolution_nhwc_halide(float* src, float* kernel, float* dst,
 #else
     static Func conv("convolution_nhwc");
     if (!conv.defined()) {
+        input.set_name("input");
+        weights.set_name("weights");
+
         Halide::Var x("x"), y("y"), c("c"), n("n");
         Halide::RDom r(0, kW, 0, kH, 0, inpChannels);
         Halide::Expr kx = x * stride + r.x;
@@ -107,15 +118,12 @@ void convolution_nhwc_halide(float* src, float* kernel, float* dst,
             .bound(c, 0, outChannels)
             .bound(n, 0, batch);
 
-        int factor = 4;
-        conv.vectorize(c, factor);
-
         // Compile
         Target target;
         target.os = Target::OS::Linux;
         target.arch = Target::Arch::RISCV;
         target.bits = 64;
-        target.vector_bits = factor * sizeof(float) * 8;
+        target.vector_bits = 128;
 
         // Tested XuanTie C906 has 128-bit vector unit
         CV_Assert(target.vector_bits <= 128);
@@ -127,6 +135,14 @@ void convolution_nhwc_halide(float* src, float* kernel, float* dst,
         target.set_features(features);
 
         std::cout << target << std::endl;
+
+        try {
+            load_plugin("autoschedule_mullapudi2016");
+            Pipeline(conv).apply_autoscheduler(target, {"Mullapudi2016", {{"parallelism", "0"}}});
+        } catch(Halide::CompileError err) {
+            CV_Error(cv::Error::StsError, err.what());
+        }
+
         conv.print_loop_nest();
 
         // Dump AOT code

@@ -71,8 +71,9 @@ if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "riscv64")
   enable_language(ASM)
   target_include_directories(algos PRIVATE "${CMAKE_CURRENT_LIST_DIR}/aot")
 else()
+  find_package(Halide REQUIRED)
   target_link_libraries(algos
-    ${Halide_LIB}
+    Halide::Halide
   )
 endif()
 
