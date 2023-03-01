@@ -13,24 +13,22 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	sd	s1, 2016(sp)                    # 8-byte Folded Spill
 	sd	s2, 2008(sp)                    # 8-byte Folded Spill
 	sd	s3, 2000(sp)                    # 8-byte Folded Spill
-	sd	s4, 1992(sp)                    # 8-byte Folded Spill
-	sd	s5, 1984(sp)                    # 8-byte Folded Spill
 	lui	a2, 2
-	addiw	a2, a2, 1360
+	addiw	a2, a2, 1344
 	sub	sp, sp, a2
 	ld	a2, 40(a1)
 	ld	t0, 16(a1)
 	lw	a6, 0(a2)
 	lw	a5, 16(a2)
 	lw	a7, 24(a2)
-	ld	t1, 16(a0)
+	ld	a4, 16(a0)
 	bnez	t0, .LBB0_2
 # %bb.1:                                # %_halide_buffer_is_bounds_query.exit
 	ld	a3, 0(a1)
 	beqz	a3, .LBB0_5
 .LBB0_2:                                # %after_bb
-	bnez	t1, .LBB0_6
-.LBB0_3:                                # %_halide_buffer_is_bounds_query.exit38
+	bnez	a4, .LBB0_6
+.LBB0_3:                                # %_halide_buffer_is_bounds_query.exit36
 	ld	a2, 0(a0)
 	bnez	a2, .LBB0_6
 # %bb.4:                                # %then_bb2
@@ -50,11 +48,11 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	sw	a3, 8(a2)
 	sw	zero, 12(a2)
 	sw	zero, 16(a2)
-	li	a4, 1080
-	sw	a4, 20(a2)
-	lui	a4, 1
-	addiw	a4, a4, 1664
-	sw	a4, 24(a2)
+	li	s1, 1080
+	sw	s1, 20(a2)
+	lui	s1, 1
+	addiw	s1, s1, 1664
+	sw	s1, 24(a2)
 	sw	zero, 28(a2)
 	sw	zero, 32(a2)
 	sw	a3, 36(a2)
@@ -75,126 +73,115 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	sw	zero, 0(a2)
 	li	a3, 1920
 	sw	a3, 4(a2)
-	li	a4, 1
-	sw	a4, 8(a2)
+	li	s1, 1
+	sw	s1, 8(a2)
 	sw	zero, 12(a2)
 	sw	zero, 16(a2)
-	li	a4, 1080
-	sw	a4, 20(a2)
+	li	s1, 1080
+	sw	s1, 20(a2)
 	sw	a3, 24(a2)
 	sw	zero, 28(a2)
 	sd	zero, 24(a1)
-	beqz	t1, .LBB0_3
+	beqz	a4, .LBB0_3
 .LBB0_6:                                # %after_bb1
 	beqz	t0, .LBB0_9
 # %bb.7:
 	li	a1, 0
-	beqz	t1, .LBB0_10
+	beqz	a4, .LBB0_10
 .LBB0_8:
 	li	a0, 0
 	or	a0, a0, a1
 	beqz	a0, .LBB0_11
-	j	.LBB0_19
-.LBB0_9:                                # %land.rhs.i45
+	j	.LBB0_17
+.LBB0_9:                                # %land.rhs.i43
 	ld	a1, 0(a1)
 	seqz	a1, a1
-	bnez	t1, .LBB0_8
-.LBB0_10:                               # %land.rhs.i50
+	bnez	a4, .LBB0_8
+.LBB0_10:                               # %land.rhs.i48
 	ld	a0, 0(a0)
 	seqz	a0, a0
 	or	a0, a0, a1
-	bnez	a0, .LBB0_19
+	bnez	a0, .LBB0_17
 .LBB0_11:                               # %"for bgr2gray.s0.y.preheader"
-	li	t2, 0
+	li	t1, 0
+	addi	t2, a4, 1
 	mulw	a0, a7, a5
 	negw	a1, a6
 	subw	a6, a1, a0
-	li	t5, 3
-	li	s4, 16
+	lui	t5, 2
+	li	a3, 16
 	li	t6, 29
-	li	a4, 15
-	slli	s5, a4, 9
+	li	a0, 15
+	slli	a0, a0, 9
 	li	s2, 77
 	li	s3, 150
-	lui	a0, 1
-	addiw	t3, a0, 1664
+	lui	a2, 1
+	addiw	t3, a2, 1664
 	li	t4, 1080
 .LBB0_12:                               # %"for bgr2gray.s0.y"
                                         # =>This Loop Header: Depth=1
                                         #     Child Loop BB0_13 Depth 2
-                                        #       Child Loop BB0_14 Depth 3
-                                        #     Child Loop BB0_17 Depth 2
-	li	a2, 0
+                                        #     Child Loop BB0_15 Depth 2
 	add	a5, t0, a6
-	addi	a3, sp, 16
-	mv	a1, t1
-.LBB0_13:                               # %"for planar.s0.c"
+	li	a2, 1920
+	addi	s0, sp, 16
+	mv	s1, t2
+.LBB0_13:                               # %"for planar.s0.x"
                                         #   Parent Loop BB0_12 Depth=1
-                                        # =>  This Loop Header: Depth=2
-                                        #       Child Loop BB0_14 Depth 3
-	li	a0, 1920
-	mv	s0, a1
-	mv	s1, a3
-.LBB0_14:                               # %"for planar.s0.x"
-                                        #   Parent Loop BB0_12 Depth=1
-                                        #     Parent Loop BB0_13 Depth=2
-                                        # =>    This Inner Loop Header: Depth=3
-	lbu	a4, 0(s0)
-	sh	a4, 0(s1)
-	addi	a0, a0, -1
-	addi	s1, s1, 2
-	addi	s0, s0, 3
-	bnez	a0, .LBB0_14
-# %bb.15:                               # %"end for planar.s0.x"
-                                        #   in Loop: Header=BB0_13 Depth=2
-	addi	a2, a2, 1
-	addi	a0, a3, 2047
-	addi	a3, a0, 1793
-	addi	a1, a1, 1
-	bne	a2, t5, .LBB0_13
-# %bb.16:                               # %"consume planar"
+                                        # =>  This Inner Loop Header: Depth=2
+	lbu	a4, -1(s1)
+	sh	a4, 0(s0)
+	lbu	a4, 0(s1)
+	addi	a1, s0, 2047
+	sh	a4, 1793(a1)
+	lbu	a1, 1(s1)
+	add	a4, s0, t5
+	sh	a1, -512(a4)
+	addi	a2, a2, -1
+	addi	s0, s0, 2
+	addi	s1, s1, 3
+	bnez	a2, .LBB0_13
+# %bb.14:                               # %"consume planar"
                                         #   in Loop: Header=BB0_12 Depth=1
 	li	a2, 120
 	addi	s0, sp, 16
-.LBB0_17:                               # %"for bgr2gray.s0.x.x"
+.LBB0_15:                               # %"for bgr2gray.s0.x.x"
                                         #   Parent Loop BB0_12 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
-	vsetvli	zero, s4, e16, m2
-	add	a0, s0, s5
-	vlhu.v	v8, (a0)
-	addi	a0, s0, 2047
+	vsetvli	zero, a3, e16, m2
+	add	a1, s0, a0
+	vlhu.v	v8, (a1)
+	addi	a1, s0, 2047
 	vlhu.v	v10, (s0)
-	addi	a0, a0, 1793
-	vlhu.v	v12, (a0)
+	addi	a1, a1, 1793
+	vlhu.v	v12, (a1)
 	vmul.vx	v10, v10, t6
 	vmadd.vx	v8, s2, v10
 	vmacc.vx	v8, s3, v12
 	vsrl.vi	v8, v8, 8
-	vsetvli	a0, zero, e8, m1
+	vsetvli	a1, zero, e8, m1
 	vnsrl.vi	v10, v8, 0
-	vsetvli	zero, s4, e8, m1
+	vsetvli	zero, a3, e8, m1
 	vsb.v	v10, (a5)
 	addi	a2, a2, -1
 	addi	a5, a5, 16
 	addi	s0, s0, 32
-	bnez	a2, .LBB0_17
-# %bb.18:                               # %"end for bgr2gray.s0.x.x"
+	bnez	a2, .LBB0_15
+# %bb.16:                               # %"end for bgr2gray.s0.x.x"
                                         #   in Loop: Header=BB0_12 Depth=1
-	addi	t2, t2, 1
-	add	t1, t1, t3
+	addi	t1, t1, 1
+	add	t2, t2, t3
 	addw	a6, a6, a7
-	bne	t2, t4, .LBB0_12
-.LBB0_19:                               # %destructor_block
+	bne	t1, t4, .LBB0_12
+.LBB0_17:                               # %destructor_block
 	li	a0, 0
 	lui	a1, 2
-	addiw	a1, a1, 1360
+	addiw	a1, a1, 1344
 	add	sp, sp, a1
 	ld	s0, 2024(sp)                    # 8-byte Folded Reload
 	ld	s1, 2016(sp)                    # 8-byte Folded Reload
 	ld	s2, 2008(sp)                    # 8-byte Folded Reload
 	ld	s3, 2000(sp)                    # 8-byte Folded Reload
-	ld	s4, 1992(sp)                    # 8-byte Folded Reload
-	ld	s5, 1984(sp)                    # 8-byte Folded Reload
 	addi	sp, sp, 2032
 	ret
 .Lfunc_end0:

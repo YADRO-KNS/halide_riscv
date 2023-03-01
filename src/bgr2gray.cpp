@@ -56,6 +56,7 @@ void bgr2gray_interleaved_halide(uint8_t* src, uint8_t* dst, int height, int wid
         planar.output_buffer().dim(1).set_stride(width).set_extent(height);
         planar.output_buffer().dim(2).set_stride(width * height).set_extent(3);
         planar.compute_at(f, y);
+        planar.reorder(c, x, y).unroll(c);
 
         int factor = 16;
         f.vectorize(x, factor);
