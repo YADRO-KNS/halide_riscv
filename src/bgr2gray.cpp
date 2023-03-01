@@ -41,11 +41,11 @@ void bgr2gray_interleaved_halide(uint8_t* src, uint8_t* dst, int height, int wid
 
         Var x("x"), y("y"), c("c");
         Func planar("planar");
-        planar(x, y, c) = cast<uint16_t>(input(x, y, c));
+        planar(x, y, c) = input(x, y, c);
 
-        Expr b = planar(x, y, 0);
-        Expr g = planar(x, y, 1);
-        Expr r = planar(x, y, 2);
+        Expr b = cast<uint16_t>(planar(x, y, 0));
+        Expr g = cast<uint16_t>(planar(x, y, 1));
+        Expr r = cast<uint16_t>(planar(x, y, 2));
         Expr res = (R2GRAY * r + G2GRAY * g + B2GRAY * b) >> 8;
         f(x, y) = cast<uint8_t>(res);
 

@@ -8,13 +8,8 @@
 	.type	bgr2gray_interleaved,@function
 bgr2gray_interleaved:                   # @bgr2gray_interleaved
 # %bb.0:                                # %entry
-	addi	sp, sp, -2032
-	sd	s0, 2024(sp)                    # 8-byte Folded Spill
-	sd	s1, 2016(sp)                    # 8-byte Folded Spill
-	sd	s2, 2008(sp)                    # 8-byte Folded Spill
-	sd	s3, 2000(sp)                    # 8-byte Folded Spill
-	lui	a2, 2
-	addiw	a2, a2, 1344
+	lui	a2, 1
+	addiw	a2, a2, 1680
 	sub	sp, sp, a2
 	ld	a2, 40(a1)
 	ld	t0, 16(a1)
@@ -44,18 +39,18 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	sw	zero, 0(a2)
 	li	a3, 1920
 	sw	a3, 4(a2)
-	li	a3, 3
-	sw	a3, 8(a2)
+	li	t1, 3
+	sw	t1, 8(a2)
 	sw	zero, 12(a2)
 	sw	zero, 16(a2)
-	li	s1, 1080
-	sw	s1, 20(a2)
-	lui	s1, 1
-	addiw	s1, s1, 1664
-	sw	s1, 24(a2)
+	li	a3, 1080
+	sw	a3, 20(a2)
+	lui	a3, 1
+	addiw	a3, a3, 1664
+	sw	a3, 24(a2)
 	sw	zero, 28(a2)
 	sw	zero, 32(a2)
-	sw	a3, 36(a2)
+	sw	t1, 36(a2)
 	li	a3, 1
 	sw	a3, 40(a2)
 	sw	zero, 44(a2)
@@ -71,15 +66,15 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	addi	a3, a3, -2047
 	sd	a3, 32(a1)
 	sw	zero, 0(a2)
-	li	a3, 1920
-	sw	a3, 4(a2)
-	li	s1, 1
-	sw	s1, 8(a2)
+	li	t1, 1920
+	sw	t1, 4(a2)
+	li	a3, 1
+	sw	a3, 8(a2)
 	sw	zero, 12(a2)
 	sw	zero, 16(a2)
-	li	s1, 1080
-	sw	s1, 20(a2)
-	sw	a3, 24(a2)
+	li	a3, 1080
+	sw	a3, 20(a2)
+	sw	t1, 24(a2)
 	sw	zero, 28(a2)
 	sd	zero, 24(a1)
 	beqz	a4, .LBB0_3
@@ -103,86 +98,83 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	or	a0, a0, a1
 	bnez	a0, .LBB0_17
 .LBB0_11:                               # %"for bgr2gray.s0.y.preheader"
-	li	t1, 0
-	addi	t2, a4, 1
+	li	t3, 0
+	addi	t4, a4, 2
+	addi	t1, sp, 1936
 	mulw	a0, a7, a5
 	negw	a1, a6
-	subw	a6, a1, a0
-	lui	t5, 2
+	subw	t5, a1, a0
 	li	a3, 16
-	li	t6, 29
-	li	a0, 15
-	slli	a0, a0, 9
-	li	s2, 77
-	li	s3, 150
-	lui	a2, 1
-	addiw	t3, a2, 1664
-	li	t4, 1080
+	li	a0, -106
+	vsetvli	a2, zero, e8, m1
+	vmv.v.x	v8, a0
+	li	a0, 29
+	vmv.v.x	v9, a0
+	li	a0, 77
+	vmv.v.x	v10, a0
+	lui	a0, 1
+	addiw	t2, a0, 1664
+	li	a6, 1080
 .LBB0_12:                               # %"for bgr2gray.s0.y"
                                         # =>This Loop Header: Depth=1
                                         #     Child Loop BB0_13 Depth 2
                                         #     Child Loop BB0_15 Depth 2
-	add	a5, t0, a6
-	li	a2, 1920
-	addi	s0, sp, 16
-	mv	s1, t2
+	add	a5, t0, t5
+	li	a0, 1920
+	mv	a2, t1
+	mv	a4, t4
 .LBB0_13:                               # %"for planar.s0.x"
                                         #   Parent Loop BB0_12 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
-	lbu	a4, -1(s1)
-	sh	a4, 0(s0)
-	lbu	a4, 0(s1)
-	addi	a1, s0, 2047
-	sh	a4, 1793(a1)
-	lbu	a1, 1(s1)
-	add	a4, s0, t5
-	sh	a1, -512(a4)
-	addi	a2, a2, -1
-	addi	s0, s0, 2
-	addi	s1, s1, 3
-	bnez	a2, .LBB0_13
+	lb	a1, -2(a4)
+	sb	a1, -1920(a2)
+	lb	a1, -1(a4)
+	sb	a1, 0(a2)
+	lb	a1, 0(a4)
+	sb	a1, 1920(a2)
+	addi	a0, a0, -1
+	addi	a4, a4, 3
+	addi	a2, a2, 1
+	bnez	a0, .LBB0_13
 # %bb.14:                               # %"consume planar"
                                         #   in Loop: Header=BB0_12 Depth=1
 	li	a2, 120
-	addi	s0, sp, 16
+	mv	a0, t1
 .LBB0_15:                               # %"for bgr2gray.s0.x.x"
                                         #   Parent Loop BB0_12 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
-	vsetvli	zero, a3, e16, m2
-	add	a1, s0, a0
-	vlhu.v	v8, (a1)
-	addi	a1, s0, 2047
-	vlhu.v	v10, (s0)
-	addi	a1, a1, 1793
-	vlhu.v	v12, (a1)
-	vmul.vx	v10, v10, t6
-	vmadd.vx	v8, s2, v10
-	vmacc.vx	v8, s3, v12
-	vsrl.vi	v8, v8, 8
-	vsetvli	a1, zero, e8, m1
-	vnsrl.vi	v10, v8, 0
+	addi	a1, a0, -1920
 	vsetvli	zero, a3, e8, m1
-	vsb.v	v10, (a5)
+	vlbu.v	v11, (a0)
+	vlbu.v	v12, (a1)
+	addi	a1, a0, 1920
+	vlbu.v	v13, (a1)
+	vwmulu.vv	v14, v11, v8
+	vwmulu.vv	v16, v12, v9
+	vwmulu.vv	v18, v13, v10
+	vsetvli	zero, zero, e16, m2
+	vadd.vv	v12, v16, v18
+	vadd.vv	v12, v14, v12
+	vsrl.vi	v12, v12, 8
+	vsetvli	a1, zero, e8, m1
+	vnsrl.vi	v11, v12, 0
+	vsetvli	zero, a3, e8, m1
+	vsb.v	v11, (a5)
 	addi	a2, a2, -1
 	addi	a5, a5, 16
-	addi	s0, s0, 32
+	addi	a0, a0, 16
 	bnez	a2, .LBB0_15
 # %bb.16:                               # %"end for bgr2gray.s0.x.x"
                                         #   in Loop: Header=BB0_12 Depth=1
-	addi	t1, t1, 1
-	add	t2, t2, t3
-	addw	a6, a6, a7
-	bne	t1, t4, .LBB0_12
+	addi	t3, t3, 1
+	add	t4, t4, t2
+	addw	t5, t5, a7
+	bne	t3, a6, .LBB0_12
 .LBB0_17:                               # %destructor_block
 	li	a0, 0
-	lui	a1, 2
-	addiw	a1, a1, 1344
+	lui	a1, 1
+	addiw	a1, a1, 1680
 	add	sp, sp, a1
-	ld	s0, 2024(sp)                    # 8-byte Folded Reload
-	ld	s1, 2016(sp)                    # 8-byte Folded Reload
-	ld	s2, 2008(sp)                    # 8-byte Folded Reload
-	ld	s3, 2000(sp)                    # 8-byte Folded Reload
-	addi	sp, sp, 2032
 	ret
 .Lfunc_end0:
 	.size	bgr2gray_interleaved, .Lfunc_end0-bgr2gray_interleaved
