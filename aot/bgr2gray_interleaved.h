@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 HALIDE_FUNCTION_ATTRS
-int bgr2gray_interleaved(struct halide_buffer_t *_b200_buffer, struct halide_buffer_t *_bgr2gray_buffer);
+int bgr2gray_interleaved(struct halide_buffer_t *_input_buffer, struct halide_buffer_t *_bgr2gray_buffer);
 
 HALIDE_FUNCTION_ATTRS
 int bgr2gray_interleaved_argv(void **args);

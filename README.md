@@ -58,7 +58,7 @@ OS: [20211230_LicheeRV_debian_d1_hdmi_8723ds](https://mega.nz/folder/lx4CyZBA#Pi
 |---|---|
 | Reference (interleaved) | 37.80ms |
 | OpenCV (interleaved), no RVV | 32.18ms |
-| Halide (interleaved) | 93.28ms |
+| Halide (interleaved) | 48.74ms |
 | Halide (planar) | 6.65ms |
 
 | Box filter<br>input: 1080x1920<br>output: 1078x1918| Median time |

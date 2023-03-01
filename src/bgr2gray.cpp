@@ -36,29 +36,35 @@ void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int w
 #else
     static Func f("bgr2gray");
     if (!f.defined()) {
+        input.set_name("input");
         uint16_t R2GRAY = 77, G2GRAY = 150, B2GRAY = 29;
 
-        Var x("x"), y("y");
-        Buffer<uint16_t> scales(3);
-        scales(0) = B2GRAY;
-        scales(1) = G2GRAY;
-        scales(2) = R2GRAY;
+        Var x("x"), y("y"), c("c");
+        Func planar("planar");
+        planar(x, y, c) = input(x, y, c);
 
-        // RDom helps prevent adding vl4r.v instructions
-        RDom r(0, 3);
-        Expr res = sum(input(x, y, r) * scales(r)) >> 8;
+        Expr b = planar(x, y, 0);
+        Expr g = planar(x, y, 1);
+        Expr r = planar(x, y, 2);
+        Expr res = (R2GRAY * r + G2GRAY * g + B2GRAY * b) >> 8;
         f(x, y) = res;
 
         // Schedule
-        int factor = 8;
-        f.vectorize(x, factor);
+        f.bound(x, 0, width).bound(y, 0, height);
+
+        planar.output_buffer().dim(0).set_stride(1).set_extent(width);
+        planar.output_buffer().dim(1).set_stride(width).set_extent(height);
+        planar.output_buffer().dim(2).set_stride(width * height).set_extent(3);
+        planar.compute_at(f, y);
+
+        f.vectorize(x, 16);
 
         // Compile
         Target target;
         target.os = Target::OS::Linux;
         target.arch = Target::Arch::RISCV;
         target.bits = 64;
-        target.vector_bits = factor * sizeof(uint16_t) * 8;
+        target.vector_bits = 128;
 
         std::vector<Target::Feature> features;
         features.push_back(Target::RVV);
