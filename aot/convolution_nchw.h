@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 HALIDE_FUNCTION_ATTRS
-int convolution_nchw(struct halide_buffer_t *_b572_buffer, struct halide_buffer_t *_b573_buffer, struct halide_buffer_t *_convolution_nchw_buffer);
+int convolution_nchw(struct halide_buffer_t *_input_buffer, struct halide_buffer_t *_weights_buffer, struct halide_buffer_t *_convolution_nchw_buffer);
 
 HALIDE_FUNCTION_ATTRS
 int convolution_nchw_argv(void **args);

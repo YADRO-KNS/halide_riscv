@@ -75,8 +75,8 @@ OS: [20211230_LicheeRV_debian_d1_hdmi_8723ds](https://mega.nz/folder/lx4CyZBA#Pi
 | Convolution FP32<br>input: 1x16x128x128<br>kernel: 32x16x3x3| Layout | Median time |
 |---|---|---|
 | OpenCV, no RVV | NCHW | 829.13ms |
-| Halide | NCHW | 1612.78ms |
-| Halide | NHWC | 629.96ms |
+| Halide | NCHW | 698.27ms |
+| Halide | NHWC | 418.95ms |
 
 ## Generate AOT kernels
 
@@ -99,19 +99,6 @@ If you want regenerate AOT artifacts or add new algorithms, build the project on
 2. Build Halide with the following patch (tested on revision https://github.com/halide/Halide/commit/7963cd4e3c23856b82567c99e0a3d16035ffe895):
 
     ```patch
-    diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-    index 4f4b8e532..8f401c442 100644
-    --- a/src/CMakeLists.txt
-    +++ b/src/CMakeLists.txt
-    @@ -540,7 +540,7 @@ endif ()
-
-    if (BUILD_SHARED_LIBS)
-        message(STATUS "Building autoschedulers enabled")
-    -    add_subdirectory(autoschedulers)
-    +    # add_subdirectory(autoschedulers)
-    else ()
-        message(STATUS "Building autoschedulers disabled (static Halide)")
-    endif ()
     diff --git a/src/CodeGen_RISCV.cpp b/src/CodeGen_RISCV.cpp
     index ba9abe04d..454558d11 100644
     --- a/src/CodeGen_RISCV.cpp
@@ -124,6 +111,18 @@ If you want regenerate AOT artifacts or add new algorithms, build the project on
         }
         return arch_flags;
     }
+    diff --git a/src/autoschedulers/CMakeLists.txt b/src/autoschedulers/CMakeLists.txt
+    index 9b88f0a66..10088bb9b 100644
+    --- a/src/autoschedulers/CMakeLists.txt
+    +++ b/src/autoschedulers/CMakeLists.txt
+    @@ -24,6 +24,6 @@ endfunction()
+
+    add_subdirectory(common)
+
+    -add_subdirectory(adams2019)
+    +# add_subdirectory(adams2019)
+    add_subdirectory(li2018)
+    add_subdirectory(mullapudi2016)
     ```
 
     ```bash
@@ -138,15 +137,17 @@ If you want regenerate AOT artifacts or add new algorithms, build the project on
         -S Halide -B halide-build
 
     cmake --build halide-build -j4
+    cmake --install halide-build --prefix halide-install
     ```
 
 3. Build a project on x86
 
     ```bash
+    export LD_LIBRARY_PATH=$HOME/halide-build/src/autoschedulers/mullapudi2016:$LD_LIBRARY_PATH
+
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
-        -DHalide_LIB=$HOME/halide-build/src/libHalide.so \
-        -DHalide_INCLUDE_DIRS=$HOME/halide-build/include \
+        -DHalide_DIR=$HOME/halide-install/lib/cmake/Halide \
         -S halide_riscv -B build
 
     cmake --build build -j$(nproc --all)
