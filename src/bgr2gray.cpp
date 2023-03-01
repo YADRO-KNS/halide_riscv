@@ -28,9 +28,9 @@ using namespace Halide;
 #endif
 
 
-void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int width) {
-    auto input = Buffer<uint16_t>::make_interleaved(src, width, height, 3);
-    Buffer<uint16_t> output(dst, {width, height});
+void bgr2gray_interleaved_halide(uint8_t* src, uint8_t* dst, int height, int width) {
+    auto input = Buffer<uint8_t>::make_interleaved(src, width, height, 3);
+    Buffer<uint8_t> output(dst, {width, height});
 #ifdef __riscv
     bgr2gray_interleaved(input, output);
 #else
@@ -41,13 +41,13 @@ void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int w
 
         Var x("x"), y("y"), c("c");
         Func planar("planar");
-        planar(x, y, c) = input(x, y, c);
+        planar(x, y, c) = cast<uint16_t>(input(x, y, c));
 
         Expr b = planar(x, y, 0);
         Expr g = planar(x, y, 1);
         Expr r = planar(x, y, 2);
         Expr res = (R2GRAY * r + G2GRAY * g + B2GRAY * b) >> 8;
-        f(x, y) = res;
+        f(x, y) = cast<uint8_t>(res);
 
         // Schedule
         f.bound(x, 0, width).bound(y, 0, height);
@@ -57,14 +57,18 @@ void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int w
         planar.output_buffer().dim(2).set_stride(width * height).set_extent(3);
         planar.compute_at(f, y);
 
-        f.vectorize(x, 16);
+        int factor = 16;
+        f.vectorize(x, factor);
 
         // Compile
         Target target;
         target.os = Target::OS::Linux;
         target.arch = Target::Arch::RISCV;
         target.bits = 64;
-        target.vector_bits = 128;
+        target.vector_bits = factor * sizeof(uint8_t) * 8;
+
+        // Tested XuanTie C906 has 128-bit vector unit
+        CV_Assert(target.vector_bits <= 128);
 
         std::vector<Target::Feature> features;
         features.push_back(Target::RVV);

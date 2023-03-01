@@ -77,12 +77,10 @@ PERF_TEST(bgr2gray, opencv) {
 
 PERF_TEST(bgr2gray_interleaved, halide) {
     randu(src, 0, 256);
-    Mat src16;
-    src.convertTo(src16, CV_16UC3);
-    Mat dst(src.size(), CV_16U);
+    Mat dst(src.size(), CV_8U);
 
     PERF_SAMPLE_BEGIN()
-        bgr2gray_interleaved_halide(src16.ptr<uint16_t>(), dst.ptr<uint16_t>(), src.rows, src.cols);
+        bgr2gray_interleaved_halide(src.ptr<uint8_t>(), dst.ptr<uint8_t>(), src.rows, src.cols);
     PERF_SAMPLE_END()
 
     SANITY_CHECK_NOTHING();

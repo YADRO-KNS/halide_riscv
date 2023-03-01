@@ -54,15 +54,12 @@ TEST(bgr2gray, opencv) {
 }
 
 TEST(bgr2gray_interleaved, halide) {
-    Mat src(height, width, CV_8UC3), dst(height, width, CV_16U), ref(height, width, CV_8U);
+    Mat src(height, width, CV_8UC3), dst(height, width, CV_8U), ref(height, width, CV_8U);
     randu(src, 0, 256);
-    Mat src16;
-    src.convertTo(src16, CV_16UC3);
 
-    bgr2gray_interleaved_halide(src16.ptr<uint16_t>(), dst.ptr<uint16_t>(), src.rows, src.cols);
+    bgr2gray_interleaved_halide(src.ptr<uint8_t>(), dst.ptr<uint8_t>(), src.rows, src.cols);
     bgr2gray_ref(src.ptr<uint8_t>(), ref.ptr<uint8_t>(), src.rows, src.cols);
 
-    ref.convertTo(ref, CV_16U);
     ASSERT_LE(norm(ref, dst, NORM_INF), 0);
 }
 

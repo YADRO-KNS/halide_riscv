@@ -41,7 +41,7 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	lui	a3, 768
 	addiw	a3, a3, 17
 	slli	a3, a3, 12
-	addi	a3, a3, 1
+	addi	a3, a3, -2047
 	sd	a3, 32(a0)
 	sw	zero, 0(a2)
 	li	a3, 1920
@@ -70,7 +70,7 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	lui	a3, 512
 	addiw	a3, a3, 17
 	slli	a3, a3, 12
-	addi	a3, a3, 1
+	addi	a3, a3, -2047
 	sd	a3, 32(a1)
 	sw	zero, 0(a2)
 	li	a3, 1920
@@ -110,72 +110,74 @@ bgr2gray_interleaved:                   # @bgr2gray_interleaved
 	negw	a1, a6
 	subw	a6, a1, a0
 	li	t5, 3
-	li	t6, 16
-	li	s2, 29
+	li	s4, 16
+	li	t6, 29
 	li	a4, 15
 	slli	s5, a4, 9
-	li	s3, 77
-	li	s4, 150
-	lui	a0, 3
-	addiw	t3, a0, -768
+	li	s2, 77
+	li	s3, 150
+	lui	a0, 1
+	addiw	t3, a0, 1664
 	li	t4, 1080
 .LBB0_12:                               # %"for bgr2gray.s0.y"
                                         # =>This Loop Header: Depth=1
                                         #     Child Loop BB0_13 Depth 2
                                         #       Child Loop BB0_14 Depth 3
                                         #     Child Loop BB0_17 Depth 2
-	li	a3, 0
-	slli	a5, a6, 1
-	add	a5, a5, t0
-	addi	a1, sp, 16
-	mv	a0, t1
+	li	a2, 0
+	add	a5, t0, a6
+	addi	a3, sp, 16
+	mv	a1, t1
 .LBB0_13:                               # %"for planar.s0.c"
                                         #   Parent Loop BB0_12 Depth=1
                                         # =>  This Loop Header: Depth=2
                                         #       Child Loop BB0_14 Depth 3
-	li	a2, 1920
-	mv	s0, a0
-	mv	s1, a1
+	li	a0, 1920
+	mv	s0, a1
+	mv	s1, a3
 .LBB0_14:                               # %"for planar.s0.x"
                                         #   Parent Loop BB0_12 Depth=1
                                         #     Parent Loop BB0_13 Depth=2
                                         # =>    This Inner Loop Header: Depth=3
-	lh	a4, 0(s0)
+	lbu	a4, 0(s0)
 	sh	a4, 0(s1)
-	addi	a2, a2, -1
+	addi	a0, a0, -1
 	addi	s1, s1, 2
-	addi	s0, s0, 6
-	bnez	a2, .LBB0_14
+	addi	s0, s0, 3
+	bnez	a0, .LBB0_14
 # %bb.15:                               # %"end for planar.s0.x"
                                         #   in Loop: Header=BB0_13 Depth=2
-	addi	a3, a3, 1
-	addi	a1, a1, 2047
-	addi	a1, a1, 1793
-	addi	a0, a0, 2
-	bne	a3, t5, .LBB0_13
+	addi	a2, a2, 1
+	addi	a0, a3, 2047
+	addi	a3, a0, 1793
+	addi	a1, a1, 1
+	bne	a2, t5, .LBB0_13
 # %bb.16:                               # %"consume planar"
                                         #   in Loop: Header=BB0_12 Depth=1
-	li	a3, 120
+	li	a2, 120
 	addi	s0, sp, 16
 .LBB0_17:                               # %"for bgr2gray.s0.x.x"
                                         #   Parent Loop BB0_12 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
-	vsetvli	zero, t6, e16, m2
+	vsetvli	zero, s4, e16, m2
 	add	a0, s0, s5
 	vlhu.v	v8, (a0)
 	addi	a0, s0, 2047
 	vlhu.v	v10, (s0)
 	addi	a0, a0, 1793
 	vlhu.v	v12, (a0)
-	vmul.vx	v10, v10, s2
-	vmadd.vx	v8, s3, v10
-	vmacc.vx	v8, s4, v12
+	vmul.vx	v10, v10, t6
+	vmadd.vx	v8, s2, v10
+	vmacc.vx	v8, s3, v12
 	vsrl.vi	v8, v8, 8
-	vsh.v	v8, (a5)
-	addi	a3, a3, -1
-	addi	a5, a5, 32
+	vsetvli	a0, zero, e8, m1
+	vnsrl.vi	v10, v8, 0
+	vsetvli	zero, s4, e8, m1
+	vsb.v	v10, (a5)
+	addi	a2, a2, -1
+	addi	a5, a5, 16
 	addi	s0, s0, 32
-	bnez	a3, .LBB0_17
+	bnez	a2, .LBB0_17
 # %bb.18:                               # %"end for bgr2gray.s0.x.x"
                                         #   in Loop: Header=BB0_12 Depth=1
 	addi	t2, t2, 1
@@ -286,7 +288,7 @@ bgr2gray_interleaved_metadata:          # @bgr2gray_interleaved_metadata
 	.word	1                               # 0x1
 	.word	3                               # 0x3
 	.byte	1                               # 0x1
-	.byte	16                              # 0x10
+	.byte	8                               # 0x8
 	.half	1                               # 0x1
 	.zero	4
 	.quad	0
@@ -298,7 +300,7 @@ bgr2gray_interleaved_metadata:          # @bgr2gray_interleaved_metadata
 	.word	2                               # 0x2
 	.word	2                               # 0x2
 	.byte	1                               # 0x1
-	.byte	16                              # 0x10
+	.byte	8                               # 0x8
 	.half	1                               # 0x1
 	.zero	4
 	.quad	0
