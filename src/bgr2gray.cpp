@@ -28,29 +28,37 @@ using namespace Halide;
 #endif
 
 
-void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int width) {
-    auto input = Buffer<uint16_t>::make_interleaved(src, width, height, 3);
-    Buffer<uint16_t> output(dst, {width, height});
+void bgr2gray_interleaved_halide(uint8_t* src, uint8_t* dst, int height, int width) {
+    auto input = Buffer<uint8_t>::make_interleaved(src, width, height, 3);
+    Buffer<uint8_t> output(dst, {width, height});
 #ifdef __riscv
     bgr2gray_interleaved(input, output);
 #else
     static Func f("bgr2gray");
     if (!f.defined()) {
+        input.set_name("input");
         uint16_t R2GRAY = 77, G2GRAY = 150, B2GRAY = 29;
 
-        Var x("x"), y("y");
-        Buffer<uint16_t> scales(3);
-        scales(0) = B2GRAY;
-        scales(1) = G2GRAY;
-        scales(2) = R2GRAY;
+        Var x("x"), y("y"), c("c");
+        Func planar("planar");
+        planar(x, y, c) = input(x, y, c);
 
-        // RDom helps prevent adding vl4r.v instructions
-        RDom r(0, 3);
-        Expr res = sum(input(x, y, r) * scales(r)) >> 8;
-        f(x, y) = res;
+        Expr b = cast<uint16_t>(planar(x, y, 0));
+        Expr g = cast<uint16_t>(planar(x, y, 1));
+        Expr r = cast<uint16_t>(planar(x, y, 2));
+        Expr res = (R2GRAY * r + G2GRAY * g + B2GRAY * b) >> 8;
+        f(x, y) = cast<uint8_t>(res);
 
         // Schedule
-        int factor = 8;
+        f.bound(x, 0, width).bound(y, 0, height);
+
+        planar.output_buffer().dim(0).set_stride(1).set_extent(width);
+        planar.output_buffer().dim(1).set_stride(width).set_extent(height);
+        planar.output_buffer().dim(2).set_stride(width * height).set_extent(3);
+        planar.compute_at(f, y);
+        planar.reorder(c, x, y).unroll(c);
+
+        int factor = 16;
         f.vectorize(x, factor);
 
         // Compile
@@ -58,7 +66,10 @@ void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int w
         target.os = Target::OS::Linux;
         target.arch = Target::Arch::RISCV;
         target.bits = 64;
-        target.vector_bits = factor * sizeof(uint16_t) * 8;
+        target.vector_bits = factor * sizeof(uint8_t) * 8;
+
+        // Tested XuanTie C906 has 128-bit vector unit
+        CV_Assert(target.vector_bits <= 128);
 
         std::vector<Target::Feature> features;
         features.push_back(Target::RVV);

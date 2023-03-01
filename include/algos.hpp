@@ -17,7 +17,7 @@ void histogram_halide(uint8_t* src, int32_t* dst, int height, int width);
 void histogram_opencv(const cv::Mat& src, cv::Mat& dst);
 
 void bgr2gray_ref(const uint8_t* src, uint8_t* dst, int height, int width);
-void bgr2gray_interleaved_halide(uint16_t* src, uint16_t* dst, int height, int width);
+void bgr2gray_interleaved_halide(uint8_t* src, uint8_t* dst, int height, int width);
 void bgr2gray_planar_halide(uint8_t* src, uint8_t* dst, int height, int width);
 void bgr2gray_opencv(const cv::Mat& src, cv::Mat& dst);
 
